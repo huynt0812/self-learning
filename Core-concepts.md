@@ -162,4 +162,86 @@ spec:
   - Generate deployment YAML file. Don't create it and save it to file: `kubectl create deployment --image=nginx nginx --dry-run=client -o yaml > nginx-deployment.yaml`
 
 ### 9. Services
+- Kubernetes services hellps us connect applications to together with other app or users.
+
+![services](/images/services.png)
+
+- Service Types:
+  - NodePort: 
+  - ClusterIP: 
+  - LoadBlancer:
+
+#### 9.1. NodePort
+
+![nodePort](/images/nodePort.png)
+
+- YAML:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+
+spec:
+  type: NodePort
+  ports:
+    - targetPort: 80
+      port: 80
+      nodePort: 300080
+  selector:
+    app: myapp
+    type: front-end
+```
+ 
+  `kubectl create -f service-definition.yml`
+
+- In case, these pods run in other nodes, we don;t need any additional configurations, Kubernetes create a service spans across multiple node and map the target port to the same node port on the nodes in ther cluster.
+
+![service-nodeport](/images/nodePort-2.png)
+
+#### 9.2. ClusterIP
+![ClusterIP](/images/clusterIP.png)
+
+- In case, we can not use the pod IP to communicate between front-end and backend because whenever the pod be restart, it's IP will be change.
+
+- So, we need a interface for groups of pod running backend, front-end, ... and these service will communicate throught IP of this interface.
+
+--> this service is known Cluster IP.
+
+- YAML:
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: back-end
+spec:
+  type: ClusterIP
+  ports:
+    - targetPort: 80 (pod backend expose)
+      port: 80 (pod service expose)
+  selector:
+    app: myapp
+    type: back-end
+```
+
+- To link the service to a set of pods we use selector.
+
+#### 9.3. LoadBalancer
+
+![LoadBlancer](/images/loadbalancer.png)
+
+- To define a LoadBalancer service, change the type from NodePort to LoadBalancer.
+
+
+### 10. Namespaces
+
+- Namespaces are used to isolate resources in Kubernetes.
+
+
+![DNS](/images/dns.png)
+
+![switch-ns](/images/switch-ns.png)
+
+![resource-quota](/images/resource-quota.png)
 
