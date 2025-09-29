@@ -265,3 +265,96 @@ spec:
     limits.cpu: 10
     limits.memory: 10Gi
 ```
+
+
+### 7. DaemonSets
+
+- The daemonset ensures that one copy ò the pod í always present in all nodes in the cluster.
+- Use cases: 
+  - want to deploy a monitoring agent or log collector on the node --> you can monitor your cluster better.
+  - kube proxy can be deployed as daemonsets
+  - Calico  
+![Daemonset](/images/daemonset.png)
+
+- Definition:
+
+![define-daemonset](/images/define-daemonset.png)
+
+
+
+### 8. Static Pods
+
+- The kubelet works ar a pod level and can only understand pods, which is why it is able to create statuc pods.
+
+- we can define the pod manifest path for kubelet.
+- Statuc Pods are created by the kubelet, deploy control plane components as Static Pods.
+
+
+### 9. Priority CLasses
+
+ - Priority classes help us define priorities for different workloads, so that higher priority workloads always get a priority over lower priority ones. If a higher priority pod cannot be scheduled, the scheduler will try to terminate a lower priority workload to make that happen.
+
+ - Priority classes are non-namespaced objects, meaning they are not created within a specific namespace
+
+ - In can be available to be configured on any pod in any namespace. 
+
+ - How to define: use a range of numbers. so a priority can be defined as high as 1 bilion  and as low as negative 2 bilion or around that number. A larger number indicates higher priority.
+
+   ![priority-class](/images/priority-class.png)
+
+
+- To list existing priority classes, run command:
+```
+kubeclt get priorityclass
+```
+
+![define-pc](/images/define-pc.png)
+
+
+- When that pod is created, it is assumed to have this priority.
+
+
+### 10. Multiple Schedulers
+
+- In K8s, beside the default scheduler, you can define any scheduler.
+
+```yaml
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+profiles:
+- scheduler: my-scheduler-2
+```
+
+
+![deploy-scheduler](/images/deploy-scheduler.png)
+
+### 11. Admission Controllers
+
+![authen-author](/images/authen.png)
+
+- Authen: check the user
+- Author: check the permission of user. Author with role-based access control.
+- We can restrict access to specific resources names, ...
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: developer
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["create"]
+  resourceNames: ["blue", "orange"]
+```
+
+
+- Admission controllers help us implement better security measures to enforce how a cluster is used.
+![admission-controllers](/images/admission-controllers.png)
+
+
+- View enabled admission controllers:
+![view-admission-controllers](/images/view-enable-ac.png)
+
+- you can see more in the file `/etc/kubernetes/manifests/kube-apiserver.yaml`
+
