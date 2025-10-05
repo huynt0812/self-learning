@@ -245,3 +245,15 @@ spec:
 
 ![resource-quota](/images/resource-quota.png)
 
+### 11. Imperative vs Declarative
+
+ ![imperative and declarative](/images/imperative.png)
+
+ ![imperative and declarative-2](/images/imperative-2.png)
+
+ 
+ ### 12. Apply Command in K8s
+
+ ![kubectl-apply](/images/kubectl-apply.png)
+
+ - when we change config in Local file and run command kubectl apply command, this value is compared with the value in the live configuration. And if there are any different, it will update in the live configuration. The last, it be applied JSON format is always updated to the latest so that it's always up to date. 
